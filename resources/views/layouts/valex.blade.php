@@ -11,6 +11,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Local Compiled Tailwind CSS (Offline-Safe) -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -81,6 +84,13 @@
                        class="flex items-center px-3 py-2.5 rounded-lg transition-all {{ request()->routeIs('dashboard') ? 'bg-[#6c5ffc] text-white font-medium shadow-md shadow-purple-900/40' : 'hover:bg-slate-800 hover:text-white text-slate-300' }}">
                         <i class="bi bi-grid-1x2-fill text-lg mr-3"></i>
                         <span>Dashboard</span>
+                    </a>
+
+                    <!-- POS Order Terminal -->
+                    <a href="{{ route('orders.pos') }}" 
+                       class="flex items-center px-3 py-2.5 rounded-lg transition-all {{ request()->routeIs('orders.pos') ? 'bg-[#6c5ffc] text-white font-medium shadow-md shadow-purple-900/40' : 'hover:bg-slate-800 hover:text-white text-slate-300' }}">
+                        <i class="bi bi-bag-plus-fill text-lg mr-3"></i>
+                        <span>POS Terminal</span>
                     </a>
 
                     <p class="px-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">Assigned Modules</p>

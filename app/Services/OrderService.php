@@ -38,7 +38,7 @@ class OrderService
         float $amountPaid,
         ?Discount $discount = null,
         ?string $referenceNumber = null,
-        string $orderType = 'dine-in',
+        string $orderType = 'dine_in',
         ?string $tableNumber = null
     ): Order {
         return DB::transaction(function () use (
@@ -54,22 +54,22 @@ class OrderService
             // 1. Calculate totals using Polymorphism (Discount)
             $subtotal = $this->calculateSubtotal($items);
             $discountAmount = $discount ? $discount->calculate($subtotal) : 0.00;
-            $totalAmount = max(0, round($subtotal - $discountAmount, 2));
+            $grandTotal = max(0, round($subtotal - $discountAmount, 2));
 
             // 2. Process payment using Polymorphism (PaymentProcessorInterface)
-            $paymentResult = $paymentProcessor->process($totalAmount, $amountPaid, $referenceNumber);
+            $paymentResult = $paymentProcessor->process($grandTotal, $amountPaid, $referenceNumber);
 
-            // 3. Create the Order record
+            // 3. Create the Order record (starts as 'pending' so it appears on the Status Board)
             $order = Order::create([
                 'user_id' => $userId,
                 'order_number' => 'ORD-' . strtoupper(Str::random(8)),
                 'order_type' => $orderType,
                 'table_number' => $tableNumber,
-                'status' => 'completed',
+                'status' => 'pending',
                 'subtotal' => $subtotal,
                 'discount_type' => $discount?->getLabel(),
-                'discount_amount' => $discountAmount,
-                'total_amount' => $totalAmount,
+                'discount' => $discountAmount,
+                'grand_total' => $grandTotal,
             ]);
 
             // 4. Save each OrderItem and deduct stock via Encapsulation (StockManager)
@@ -97,16 +97,16 @@ class OrderService
                 'reference_number' => $paymentResult['reference_number'],
             ]);
 
-            // 6. Record in AuditLog
+            // 6. Record in AuditLog (aligned with teammate's Audit Trail schema)
             AuditLog::create([
                 'user_id' => $userId,
-                'action' => 'order_created',
-                'model_type' => Order::class,
-                'model_id' => $order->id,
-                'description' => "Created order {$order->order_number} totaling ₱{$totalAmount}",
+                'action' => 'Created Order',
+                'description' => "Created order {$order->order_number} ({$orderType}) totaling ₱{$grandTotal}",
+                'ip_address' => request()?->ip(),
+                'user_agent' => request()?->userAgent(),
             ]);
 
-            return $order->load(['items.menuItem', 'payment']);
+            return $order->load(['orderItems.menuItem']);
         });
     }
 }

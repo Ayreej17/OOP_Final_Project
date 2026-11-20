@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuditTrailController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +10,12 @@ Route::view('/', 'welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
+
+    // ==========================================
+    // Assigned to @Ayreej17 (POS & OOP Order Processing)
+    // ==========================================
+    Route::get('/orders/pos', [OrderController::class, 'create'])->name('orders.pos');
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
     // ==========================================
     // Assigned to @srabmaudo-bit (Reports & Audit Trail)
