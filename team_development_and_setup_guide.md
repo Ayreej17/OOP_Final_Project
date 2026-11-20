@@ -1,82 +1,63 @@
-# Restaurant Ordering System — Team Development & Setup Guide
+# Restaurant Ordering System — Team Development & Collaboration Guide
 
-This document explains everything currently built in the repository, why certain architectural choices were made, and how our team will collaborate moving forward.
+This document tracks everything completed in the repository, explains our architectural choices, outlines our Git branching workflow, and logs team collaborations for our CS06 Final Project.
 
----
+## 1. Completed Foundation & Setup
 
-## 1. Project Foundation & Authentication
-
-### What Was Done
+### Phase 1: Project Initialization & Authentication
 * Installed a fresh **Laravel** application using the **Livewire starter kit** with **Single-File Components** and **Laravel's built-in authentication (Fortify)**.
-* Verified authentication routes (`/login`, `/register`) and confirmed database connectivity by creating an initial test user.
-* Selected **Pest** as the testing framework to write automated business-rule tests later.
+* Verified authentication routes (`/login`, `/register`) and confirmed database connectivity with an initial test user.
+* Configured **Pest** as our testing framework for upcoming automated business-rule tests.
+* **Why we did this:** The Livewire starter kit already provides Blade, Tailwind CSS, and Fortify authentication out of the box, avoiding route conflicts from extra packages like Breeze while keeping our codebase lean and defensible.
 
-### Why We Did It This Way
-* **No Laravel Breeze Needed:** The Livewire starter kit already includes Blade, Tailwind CSS, and Laravel Fortify out of the box. Installing Breeze on top of it would cause duplicate routes and view conflicts.
-* **Lightweight Auth:** Optional features like Two-Factor Authentication (2FA) and Email Verification were skipped because authentication does not count toward our five required functional modules. Keeping auth simple lets us focus on our **User Management** module and custom OOP classes.
+### Phase 2: Repository & Team Collaborator Setup
+* Initialized Git locally, renamed the primary branch to `main`, and connected the remote repository (`https://github.com/Ayreej17/OOP_Final_Project.git`).
+* Added project documentation (`README.md` and `docs/DEVELOPMENT_GUIDE.md`).
+* Added all three group members as **collaborators** on the GitHub repository so individual commits and pull requests are tracked under each member's GitHub account.
 
----
+### Phase 3: Database Schema & Migrations
+Created and structured **7 migrations** (1 table update + 6 new business tables) to satisfy the minimum 5 business tables and support all required modules:
+1. **`users` (`add_role_and_status_to_users_table`)**: Added `role` (`'admin'`, `'staff'`) and `is_active` (`boolean`) to support User Management and role-based access control.
+2. **`categories`**: Stores menu categories (`name`, `description`) for Master Data filtering.
+3. **`menu_items`**: Stores items (`category_id`, `name`, `description`, `price`, `stock`, `is_available`) for Master Data CRUD and Encapsulation stock protection.
+4. **`orders`**: Tracks transactions (`order_number`, `user_id`, `order_type`, `table_number`, `status`, `discount_type`, `subtotal`, `discount_amount`, `total_amount`) for Inheritance and state-transition business rules.
+5. **`order_items`**: Pivot table linking orders and menu items (`order_id`, `menu_item_id`, `quantity`, `unit_price`, `subtotal`), freezing `unit_price` at purchase time.
+6. **`payments`**: Stores payment records (`order_id`, `payment_method`, `amount_paid`, `change_amount`, `reference_number`, `status`) for Polymorphism and Abstraction.
+7. **`audit_logs`**: Logs critical system events (`user_id`, `action`, `model_type`, `model_id`, `description`) for the Audit Trail module.
 
-## 2. Git & GitHub Workflow
+## 2. Team Workflow & Module Division
 
-### What Was Done
-* Initialized Git locally, configured user credentials, and created the initial commit.
-* Renamed the default branch from `master` to `main` (`git branch -M main`).
-* Connected our local repository to GitHub (`git remote add origin ...`) and linked the upstream tracking branch (`git push -u origin main`).
+To ensure clean collaboration and verifiable Git contributions for every member, we follow a **Feature Branch Workflow**:
 
-### How We Will Collaborate
-* **`main` Branch:** Holds our stable, shared foundation (migrations, models, seeders, and tested features).
-* **Feature Branches:** Once our shared models and seeders are pushed, each teammate should create their own branch (e.g., `git checkout -b feature/module-name`) before writing code.
-* **Individual Commits:** Every teammate must commit and push their own work regularly so GitHub accurately records individual contributions for grading.
+1. **Sync with `main`:** Before starting any task, run `git pull origin main`.
+2. **Work on Assigned Feature Branches:** Never push unfinished code directly to `main`. Each member works on their dedicated branch:
+   * **`feature/orders-oop` (Member 1):** Transactions & Business Rules — POS Order screen, Checkout/Payment processing, custom OOP classes (Encapsulation, Inheritance, Polymorphism, Abstraction), and Pest tests.
+   * **`feature/users-menu` (Member 2):** User Management & Master Data — Role-based Gates/Middleware, User CRUD + activate/deactivate, Categories & Menu Items CRUD with search, filtering, and pagination.
+   * **`feature/reports-audit` (Member 3):** Operational Reports & Audit Trail — Sales Summary and Top-Selling Items reports (with date filters and printable view), plus the Audit Trail viewer and logging service.
+3. **Commit & Pull Request:** Commit frequently with clear messages (`git commit -m "Implement ..."`), push to your feature branch, and open a Pull Request on GitHub to merge completed features into `main`.
 
----
+## 3. Immediate Next Steps (Shared Foundation)
+Before splitting into feature branches, we are completing two final shared setup items on `main`:
+* [ ] Configure `$fillable` properties and Eloquent relationships (`hasMany`, `belongsTo`) across all 7 models.
+* [ ] Build and run `DatabaseSeeder` to populate default Admin/Staff test accounts, categories, and menu items.
 
-## 3. Database Schema & Migrations
+## 4. Collaboration & Contribution Log
+*(Update this table as milestones and pull requests are completed)*
 
-We generated **7 migrations** (1 table update + 6 new business tables) to satisfy the minimum 5 business tables and support all required modules.
+| Date | Milestone / Activity | Branch | Collaborators Involved | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| Nov 2026 | Initial Laravel setup, GitHub repo creation, & 7 database migrations | `main` | Member 1 | Completed |
+| Nov 2026 | Added teammates as GitHub collaborators & established team workflow | `main` | All Members | Completed |
+| TBD | Eloquent model relationships & database seeders | `main` | All Members | In Progress |
+| TBD | User Management & Menu Master Data modules | `feature/users-menu` | Member 2 | Pending |
+| TBD | POS Ordering, Payments, & Core OOP classes | `feature/orders-oop` | Member 1 | Pending |
+| TBD | Operational Reports & Audit Trail modules | `feature/reports-audit` | Member 3 | Pending |
 
-### Table Breakdown & Purpose
-1. **`users` (`add_role_and_status_to_users_table`)**
-   * **Columns Added:** `role` (defaults to `'staff'`, can be `'admin'`) and `is_active` (boolean, defaults to `true`).
-   * **Purpose:** Supports the **User Management** module—allowing Admins to assign roles and activate/deactivate staff accounts without deleting historical records.
-2. **`categories`**
-   * **Columns:** `id`, `name` (unique), `description`, `timestamps`.
-   * **Purpose:** Groups menu items (e.g., Main Course, Drinks, Desserts) for **Master Data** filtering.
-3. **`menu_items`**
-   * **Columns:** `id`, `category_id` (foreign key), `name`, `description`, `price`, `stock`, `is_available`, `timestamps`.
-   * **Purpose:** Stores restaurant items for **Master Data** CRUD and search. The `stock` and `is_available` columns will be protected by **Encapsulation** rules so out-of-stock items cannot be ordered.
-4. **`orders`**
-   * **Columns:** `id`, `order_number` (unique), `user_id` (foreign key), `order_type` (`'dine_in'` or `'takeout'`), `table_number`, `status` (`'pending'`, `'preparing'`, `'completed'`, `'cancelled'`), `discount_type`, `subtotal`, `discount_amount`, `total_amount`, `timestamps`.
-   * **Purpose:** Tracks the core **Transaction** lifecycle, enforces valid status transitions, and supports **Inheritance** (e.g., Dine-In vs. Takeout or Discount types).
-5. **`order_items`**
-   * **Columns:** `id`, `order_id` (foreign key), `menu_item_id` (foreign key), `quantity`, `unit_price`, `subtotal`, `timestamps`.
-   * **Purpose:** Pivot table connecting orders and menu items. Storing `unit_price` here freezes the price at the moment of purchase so future menu price updates do not alter past sales reports.
-6. **`payments`**
-   * **Columns:** `id`, `order_id` (foreign key), `payment_method` (`'cash'`, `'gcash'`, `'card'`), `amount_paid`, `change_amount`, `reference_number`, `status`, `timestamps`.
-   * **Purpose:** Completes the end-to-end transaction and demonstrates **Abstraction & Polymorphism** via different payment processor classes.
-7. **`audit_logs`**
-   * **Columns:** `id`, `user_id` (nullable foreign key), `action`, `model_type`, `model_id`, `description`, `timestamps`.
-   * **Purpose:** Powers the **Audit Trail** module by recording critical actions (such as order cancellations, menu price updates, and user status changes).
-
-### Why Every Table Has `$table->timestamps()`
-* **Eloquent Default:** Laravel automatically manages `created_at` and `updated_at` whenever models are created or updated.
-* **Reports Module:** Date-filtered sales and top-selling item reports rely directly on `orders.created_at` and `payments.created_at`.
-* **Audit Trail & Kitchen Queue:** Tracks exact event times in `audit_logs` and lets staff process orders in chronological order.
-
----
-
-## 4. What Comes Next (Before Splitting Into Feature Branches)
-
-Before we split up the five modules among the three of us, we still need to finish two shared setup steps on `main`:
-1. **Configure Eloquent Models:** Define `$fillable` properties and relationships (`hasMany`, `belongsTo`) inside `User`, `Category`, `MenuItem`, `Order`, `OrderItem`, `Payment`, and `AuditLog`.
-2. **Create Database Seeders:** Seed sample Admin/Staff accounts, food categories, and menu items so everyone has identical test data locally (`php artisan migrate:seed`).
-
----
-
-## 5. Quick Reference: Getting Started Locally
-
-If you are pulling this repository for the first time:
-1. Run `git pull origin main` to get the latest updates.
-2. Make sure your local MySQL/MariaDB server is running and `.env` matches your database credentials.
-3. Run `php artisan migrate` to create all tables in your local database.
-4. Run `composer run dev` to start both Laravel and Vite.
+## 5. Local Onboarding Checklist for Collaborators
+When cloning or pulling the repository for the first time:
+1. Clone the repo: `git clone https://github.com/Ayreej17/OOP_Final_Project.git`
+2. Install PHP & JS packages: `composer install && npm install`
+3. Copy environment file and generate key: `cp .env.example .env && php artisan key:generate`
+4. Configure your local MySQL/MariaDB database in `.env` and run `php artisan migrate --seed`
+5. Create your feature branch: `git checkout -b feature/your-branch-name`
+6. Start the dev server: `composer run dev`
