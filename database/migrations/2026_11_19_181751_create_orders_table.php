@@ -10,15 +10,15 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('order_number')->unique();
-            $table->foreignId('user_id')->constrained();
-            $table->string('order_type')->default('dine_in');
+            $table->string('order_number')->unique()->nullable();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('order_type')->default('dine_in'); // dine_in, takeout
             $table->string('table_number')->nullable();
-            $table->string('status')->default('pending');
+            $table->string('status')->default('pending');     // pending, preparing, completed, cancelled
             $table->string('discount_type')->nullable();
             $table->decimal('subtotal', 10, 2)->default(0);
-            $table->decimal('discount_amount', 10, 2)->default(0);
-            $table->decimal('total_amount', 10, 2)->default(0);
+            $table->decimal('discount', 10, 2)->default(0);
+            $table->decimal('grand_total', 10, 2)->default(0);
             $table->timestamps();
         });
     }
