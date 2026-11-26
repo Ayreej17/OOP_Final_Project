@@ -20,9 +20,9 @@ class DatabaseSeeder extends Seeder
         $admin = User::firstOrCreate(
             ['email' => 'admin@restaurant.test'],
             [
-                'name'      => 'Admin User',
-                'password'  => Hash::make('password'),
-                'role'      => 'admin',
+                'name' => 'Admin User',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
                 'is_active' => true,
             ]
         );
@@ -30,9 +30,9 @@ class DatabaseSeeder extends Seeder
         $staff = User::firstOrCreate(
             ['email' => 'staff@restaurant.test'],
             [
-                'name'      => 'Staff Member',
-                'password'  => Hash::make('password'),
-                'role'      => 'staff',
+                'name' => 'Staff Member',
+                'password' => Hash::make('password'),
+                'role' => 'staff',
                 'is_active' => true,
             ]
         );
@@ -72,16 +72,16 @@ class DatabaseSeeder extends Seeder
         foreach ($ordersData as $idx => $ord) {
             $date = Carbon::now()->subDays($ord['days_ago'])->subHours(rand(1, 8));
             $order = Order::create([
-                'order_number' => 'ORD-' . strtoupper(substr(uniqid(), 7)),
-                'user_id'      => $staff->id,
-                'order_type'   => $ord['type'],
+                'order_number' => 'ORD-'.strtoupper(substr(uniqid(), 7)),
+                'user_id' => $staff->id,
+                'order_type' => $ord['type'],
                 'table_number' => $ord['table'],
-                'status'       => $ord['status'],
-                'subtotal'     => 0,
-                'discount'     => 0,
-                'grand_total'  => 0,
-                'created_at'   => $date,
-                'updated_at'   => $date,
+                'status' => $ord['status'],
+                'subtotal' => 0,
+                'discount' => 0,
+                'grand_total' => 0,
+                'created_at' => $date,
+                'updated_at' => $date,
             ]);
 
             // Add 2-3 items per order
@@ -93,34 +93,34 @@ class DatabaseSeeder extends Seeder
                 $subtotal += $lineTotal;
 
                 OrderItem::create([
-                    'order_id'     => $order->id,
+                    'order_id' => $order->id,
                     'menu_item_id' => $menuItem->id,
-                    'quantity'     => $qty,
-                    'unit_price'   => $menuItem->price,
-                    'subtotal'     => $lineTotal,
-                    'created_at'   => $date,
-                    'updated_at'   => $date,
+                    'quantity' => $qty,
+                    'unit_price' => $menuItem->price,
+                    'subtotal' => $lineTotal,
+                    'created_at' => $date,
+                    'updated_at' => $date,
                 ]);
             }
 
             $order->update([
-                'subtotal'    => $subtotal,
+                'subtotal' => $subtotal,
                 'grand_total' => $subtotal,
             ]);
         }
 
         // 5. Initial Audit Logs
         AuditLog::create([
-            'user_id'     => $admin->id,
-            'action'      => 'SYSTEM_INITIALIZATION',
+            'user_id' => $admin->id,
+            'action' => 'SYSTEM_INITIALIZATION',
             'description' => 'Database successfully migrated and seeded with master restaurant data.',
-            'created_at'  => Carbon::now()->subDays(3),
+            'created_at' => Carbon::now()->subDays(3),
         ]);
         AuditLog::create([
-            'user_id'     => $staff->id,
-            'action'      => 'USER_LOGIN',
+            'user_id' => $staff->id,
+            'action' => 'USER_LOGIN',
             'description' => 'Staff user signed in to the restaurant POS workstation.',
-            'created_at'  => Carbon::now()->subHours(2),
+            'created_at' => Carbon::now()->subHours(2),
         ]);
     }
 }

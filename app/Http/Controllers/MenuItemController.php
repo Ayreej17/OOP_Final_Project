@@ -40,7 +40,7 @@ class MenuItemController extends Controller
     public function edit(MenuItem $menuItem)
     {
         return view('menu-items.edit', [
-            'menuItem'   => $menuItem,
+            'menuItem' => $menuItem,
             'categories' => Category::orderBy('name')->get(),
         ]);
     }
@@ -68,10 +68,10 @@ class MenuItemController extends Controller
     {
         $data = $request->validate([
             'category_id' => ['nullable', 'exists:categories,id'],
-            'name'        => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
-            'price'       => ['required', 'numeric', 'min:0', 'max:99999999.99'],
-            'stock'       => ['required', 'integer', 'min:0'],
+            'price' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
+            'stock' => ['required', 'integer', 'min:0'],
         ]);
 
         $data['is_available'] = $request->boolean('is_available');

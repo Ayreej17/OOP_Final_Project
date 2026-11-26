@@ -24,7 +24,7 @@ class OrderStatusController extends Controller
      * Valid state transitions map.
      */
     private const ALLOWED_TRANSITIONS = [
-        'pending'   => ['preparing', 'cancelled'],
+        'pending' => ['preparing', 'cancelled'],
         'preparing' => ['completed', 'cancelled'],
         'completed' => [], // Terminal state
         'cancelled' => [], // Terminal state
@@ -40,13 +40,13 @@ class OrderStatusController extends Controller
             ->latest()
             ->get();
 
-        $pendingOrders   = $orders->where('status', 'pending');
+        $pendingOrders = $orders->where('status', 'pending');
         $preparingOrders = $orders->where('status', 'preparing');
         $completedOrders = $orders->where('status', 'completed')->take(10);
         $cancelledOrders = $orders->where('status', 'cancelled')->take(10);
 
         return view('orders.status-board', [
-            'pendingOrders'   => $pendingOrders,
+            'pendingOrders' => $pendingOrders,
             'preparingOrders' => $preparingOrders,
             'completedOrders' => $completedOrders,
             'cancelledOrders' => $cancelledOrders,
@@ -63,7 +63,7 @@ class OrderStatusController extends Controller
         ]);
 
         $currentStatus = $order->status;
-        $targetStatus  = $request->input('status');
+        $targetStatus = $request->input('status');
 
         // Check if transition is valid
         if (! $this->canTransition($currentStatus, $targetStatus)) {

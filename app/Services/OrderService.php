@@ -62,7 +62,7 @@ class OrderService
             // 3. Create the Order record (starts as 'pending' so it appears on the Status Board)
             $order = Order::create([
                 'user_id' => $userId,
-                'order_number' => 'ORD-' . strtoupper(Str::random(8)),
+                'order_number' => 'ORD-'.strtoupper(Str::random(8)),
                 'order_type' => $orderType,
                 'table_number' => $tableNumber,
                 'status' => 'pending',

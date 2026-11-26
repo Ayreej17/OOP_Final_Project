@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Models\Order;
-use InvalidArgumentException;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 
 class OrderStatusService
 {

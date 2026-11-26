@@ -56,14 +56,14 @@ class ReportController extends Controller
         );
 
         return view('reports.sales', [
-            'orders'             => $orders,
-            'totalRevenue'       => $totalRevenue,
-            'totalOrders'        => $totalOrders,
-            'averageOrderValue'  => $averageOrderValue,
+            'orders' => $orders,
+            'totalRevenue' => $totalRevenue,
+            'totalOrders' => $totalOrders,
+            'averageOrderValue' => $averageOrderValue,
             'orderTypeBreakdown' => $orderTypeBreakdown,
-            'startDate'          => $startDate->toDateString(),
-            'endDate'            => $endDate->toDateString(),
-            'isPrint'            => $request->boolean('print'),
+            'startDate' => $startDate->toDateString(),
+            'endDate' => $endDate->toDateString(),
+            'isPrint' => $request->boolean('print'),
         ]);
     }
 
@@ -108,11 +108,11 @@ class ReportController extends Controller
         );
 
         return view('reports.top-selling', [
-            'topItems'  => $topItems,
+            'topItems' => $topItems,
             'startDate' => $startDate->toDateString(),
-            'endDate'   => $endDate->toDateString(),
-            'limit'     => $limit,
-            'isPrint'   => $request->boolean('print'),
+            'endDate' => $endDate->toDateString(),
+            'limit' => $limit,
+            'isPrint' => $request->boolean('print'),
         ]);
     }
 }

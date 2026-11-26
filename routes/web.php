@@ -1,13 +1,13 @@
 <?php
 
 use App\Http\Controllers\AuditTrailController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\ReportController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\MenuItemController;
+use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
 
@@ -32,9 +32,7 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
     Route::get('/reports/sales', [ReportController::class, 'salesSummary'])->name('reports.sales');
     Route::get('/reports/top-selling', [ReportController::class, 'topSelling'])->name('reports.top-selling');
 
-
-
-       // ========================================
+    // ========================================
     // Assigned to @Heqieboo (User Management & Master Data)
     // ========================================
 
@@ -47,12 +45,12 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
         Route::patch('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])
             ->name('users.toggle-status');
 
-    // 3. System Audit Trail
-    Route::get('/audit-trail', [AuditTrailController::class, 'index'])->name('audit.index');
+        // 3. System Audit Trail
+        Route::get('/audit-trail', [AuditTrailController::class, 'index'])->name('audit.index');
 
-    Route::resource('categories', CategoryController::class)->except(['show']);
-    Route::resource('menu-items', MenuItemController::class)->except(['show', 'index']);
-});
+        Route::resource('categories', CategoryController::class)->except(['show']);
+        Route::resource('menu-items', MenuItemController::class)->except(['show', 'index']);
+    });
 });
 
-require __DIR__ .'/settings.php';
+require __DIR__.'/settings.php';

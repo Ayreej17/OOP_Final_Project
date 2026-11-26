@@ -71,8 +71,8 @@ class OrderController extends Controller
 
             // 2. Polymorphic PaymentProcessor instantiation
             $paymentProcessor = match ($validated['payment_method']) {
-                'gcash' => new GCashPayment(),
-                default => new CashPayment(),
+                'gcash' => new GCashPayment,
+                default => new CashPayment,
             };
 
             // 3. Delegate to OrderService
@@ -89,7 +89,7 @@ class OrderController extends Controller
 
             return redirect()
                 ->route('orders.pos')
-                ->with('success', "Order {$order->order_number} placed! Grand Total: ₱" . number_format($order->grand_total, 2));
+                ->with('success', "Order {$order->order_number} placed! Grand Total: ₱".number_format($order->grand_total, 2));
         } catch (Exception $e) {
             return redirect()
                 ->route('orders.pos')

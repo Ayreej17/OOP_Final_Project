@@ -17,8 +17,8 @@ class AuditLogger
     public static function log(string $action, ?string $description = null, ?int $userId = null): AuditLog
     {
         $payload = [
-            'user_id'     => $userId ?? Auth::id(),
-            'action'      => strtoupper($action),
+            'user_id' => $userId ?? Auth::id(),
+            'action' => strtoupper($action),
             'description' => $description,
         ];
 

@@ -20,7 +20,7 @@ class AuditTrailController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('action', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%");
+                    ->orWhere('description', 'LIKE', "%{$search}%");
             });
         }
 
@@ -45,17 +45,17 @@ class AuditTrailController extends Controller
         $distinctActions = AuditLog::select('action')->distinct()->pluck('action');
 
         // Check which view file exists so it works regardless of where the file is saved
-        $viewName = view()->exists('audit.index') 
-            ? 'audit.index' 
+        $viewName = view()->exists('audit.index')
+            ? 'audit.index'
             : 'layouts.auth.audit.index';
 
         return view($viewName, [
-            'logs'            => $logs,
+            'logs' => $logs,
             'distinctActions' => $distinctActions,
-            'search'          => $search,
-            'actionFilter'    => $action,
-            'startDate'       => $startDate,
-            'endDate'         => $endDate,
+            'search' => $search,
+            'actionFilter' => $action,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ]);
     }
 }

@@ -19,10 +19,11 @@ class MenuItem extends Model
         'stock',
         'is_available',
     ];
-        protected function casts(): array
+
+    protected function casts(): array
     {
         return [
-            'price'        => 'decimal:2',
+            'price' => 'decimal:2',
             'is_available' => 'boolean',
         ];
     }

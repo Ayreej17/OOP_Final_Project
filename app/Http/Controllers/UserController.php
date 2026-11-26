@@ -11,8 +11,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users = User::query()
-            ->when($request->search, fn ($q, $s) => $q->where(fn ($q) =>
-                $q->where('name', 'like', "%{$s}%")->orWhere('email', 'like', "%{$s}%")))
+            ->when($request->search, fn ($q, $s) => $q->where(fn ($q) => $q->where('name', 'like', "%{$s}%")->orWhere('email', 'like', "%{$s}%")))
             ->when($request->role, fn ($q, $r) => $q->where('role', $r))
             ->latest()->paginate(10)->withQueryString();
 
@@ -27,10 +26,10 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', 'unique:users,email'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role'     => ['required', Rule::in(['admin', 'staff'])],
+            'role' => ['required', Rule::in(['admin', 'staff'])],
         ]);
 
         User::create($data + ['is_active' => true]);
@@ -46,14 +45,18 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $data = $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', Rule::unique('users')->ignore($user->id)],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            'role'     => ['required', Rule::in(['admin', 'staff'])],
+            'role' => ['required', Rule::in(['admin', 'staff'])],
         ]);
 
-        if (empty($data['password'])) unset($data['password']);
-        if ($user->id === auth()->id()) unset($data['role']); // can't demote yourself
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
+        if ($user->id === auth()->id()) {
+            unset($data['role']);
+        } // can't demote yourself
 
         $user->update($data);
 
@@ -68,7 +71,7 @@ class UserController extends Controller
 
         $user->update(['is_active' => ! $user->is_active]);
 
-        return back()->with('success', 'Account ' . ($user->is_active ? 'activated' : 'deactivated') . '.');
+        return back()->with('success', 'Account '.($user->is_active ? 'activated' : 'deactivated').'.');
     }
 
     public function destroy(User $user)
