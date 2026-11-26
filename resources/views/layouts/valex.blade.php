@@ -116,26 +116,28 @@
                         <span>Top Selling Items</span>
                     </a>
 
-                    <!-- 5. System Audit Trail -->
-                    <a href="{{ route('audit.index') }}" 
-                       class="flex items-center px-3 py-2.5 rounded-lg transition-all {{ request()->routeIs('audit.index') ? 'bg-[#6c5ffc] text-white font-medium shadow-md shadow-purple-900/40' : 'hover:bg-slate-800 hover:text-white text-slate-300' }}">
-                        <i class="bi bi-shield-lock-fill text-lg mr-3"></i>
-                        <span>Audit Trail</span>
-                    </a>
-                    @if(auth()->user()->isAdmin())
-                    <!-- Administration (admin only) -->
-                    <a href="{{ route('users.index') }}"
-                    class="flex items-center px-3 py-2.5 rounded-lg transition-all {{ request()->routeIs('users.*') ? 'bg-[#6c5ffc] text-white font-medium shadow-md shadow-purple-900/40' : 'hover:bg-slate-800 hover:text-white text-slate-300' }}">
-                        <i class="bi bi-people-fill text-lg mr-3"></i>
-                        <span>User Management</span>
-                    </a>
-
-                    <a href="{{ route('categories.index') }}"
-                    class="flex items-center px-3 py-2.5 rounded-lg transition-all {{ request()->routeIs('categories.*') ? 'bg-[#6c5ffc] text-white font-medium shadow-md shadow-purple-900/40' : 'hover:bg-slate-800 hover:text-white text-slate-300' }}">
-                        <i class="bi bi-tags-fill text-lg mr-3"></i>
-                        <span>Categories</span>
-                    </a>
-                @endif
+					@if(auth()->user()?->isAdmin())
+                               <!-- 5. System Audit Trail -->
+                               <a href="{{ route('audit.index') }}" 
+                                  class="flex items-center px-3 py-2.5 rounded-lg transition-all {{ request()->routeIs('audit.index') ? 'bg-[#6c5ffc] text-white font-medium shadow-md shadow-purple-900/40' : 'hover:bg-slate-800 hover:text-white text-slate-300' }}">
+                                   <i class="bi bi-shield-lock-fill text-lg mr-3"></i>
+                                   <span>Audit Trail</span>
+                               </a>
+       
+                               <!-- Administration (admin only) -->
+                               <a href="{{ route('users.index') }}"
+                                  class="flex items-center px-3 py-2.5 rounded-lg transition-all {{ request()->routeIs('users.*') ? 'bg-[#6c5ffc] text-white font-medium shadow-md shadow-purple-900/40' : 'hover:bg-slate-800 hover:text-white text-slate-300' }}">
+                                   <i class="bi bi-people-fill text-lg mr-3"></i>
+                                   <span>User Management</span>
+                               </a>
+       
+                               <a href="{{ route('categories.index') }}"
+                                  class="flex items-center px-3 py-2.5 rounded-lg transition-all {{ request()->routeIs('categories.*') ? 'bg-[#6c5ffc] text-white font-medium shadow-md shadow-purple-900/40' : 'hover:bg-slate-800 hover:text-white text-slate-300' }}">
+                                   <i class="bi bi-tags-fill text-lg mr-3"></i>
+                                   <span>Categories</span>
+                               </a>
+                           @endif
+         
                 <a href="{{ route('menu-items.index') }}"
                     class="flex items-center px-3 py-2.5 rounded-lg transition-all {{ request()->routeIs('menu-items.*') ? 'bg-[#6c5ffc] text-white font-medium shadow-md shadow-purple-900/40' : 'hover:bg-slate-800 hover:text-white text-slate-300' }}">
                         <i class="bi bi-cup-hot-fill text-lg mr-3"></i>
