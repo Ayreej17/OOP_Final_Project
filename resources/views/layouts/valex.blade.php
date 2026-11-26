@@ -66,13 +66,15 @@
             <div>
                 <!-- Brand Logo -->
                 <div class="h-16 flex items-center px-6 bg-[#0f1523] border-b border-slate-800">
-                    <div class="w-9 h-9 rounded-lg valex-gradient flex items-center justify-center text-white font-bold text-lg shadow-md mr-3">
-                        JMA
-                    </div>
-                    <div>
-                        <span class="text-white font-bold text-lg tracking-wide">JMA KITCHEN</span>
-                        <span class="text-[10px] block text-purple-400 uppercase tracking-widest font-semibold">Restaurant POS</span>
-                    </div>
+<div class="py-3.5 flex items-center px-4 bg-[#0f1523] border-b border-slate-800">
+    <img src="{{ asset('images/jma-logo2.png') }}"
+         alt="JMA Kitchen Logo"
+         class="w-14 h-14 rounded-xl object-cover shrink-0 shadow-lg mr-3">
+    <div class="leading-tight">
+        <span class="text-white font-bold text-base tracking-wide whitespace-nowrap block">JMA KITCHEN</span>
+        <span class="text-[10px] block text-purple-400 uppercase tracking-widest font-semibold mt-0.5">Restaurant POS</span>
+    </div>
+</div>
                 </div>
 
                 <!-- Navigation List -->
