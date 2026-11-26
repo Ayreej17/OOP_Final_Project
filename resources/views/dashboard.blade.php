@@ -146,7 +146,8 @@
                             <p class="text-[11px] text-slate-500">Item sales rankings</p>
                         </div>
                     </a>
-
+                    
+					@if(auth()->user()?->isAdmin())
                     <a href="{{ route('audit.index') }}" class="p-3 rounded-lg border border-slate-200 hover:border-purple-300 hover:bg-purple-50/30 flex items-center transition group">
                         <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg mr-3 group-hover:scale-105 transition">
                             <i class="bi bi-journal-text"></i>
@@ -156,6 +157,8 @@
                             <p class="text-[11px] text-slate-500">Trace actions & timestamps</p>
                         </div>
                     </a>
+      					@endif
+      					              
                 </div>
             </div>
         </div>
