@@ -1,59 +1,187 @@
-<x-layouts::auth :title="__('Log in')">
-    <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')" />
+<!DOCTYPE html>
+<html lang="en">
 
-        <!-- Session Status -->
-        <x-auth-session-status class="text-center" :status="session('status')" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JMA Kitchen — Sign In</title>
 
-        <x-passkey-verify />
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/jma-logo.png') }}">
 
-        <form method="POST" action="{{ route('login.store') }}" class="flex flex-col gap-6">
-            @csrf
+    <!-- Fonts & Icons (matching Valex Dashboard) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-            <!-- Email Address -->
-            <flux:input
-                name="email"
-                :label="__('Email address')"
-                :value="old('email')"
-                type="email"
-                required
-                autofocus
-                autocomplete="email"
-                placeholder="email@example.com"
-            />
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-            <!-- Password -->
-            <div class="relative">
-                <flux:input
-                    name="password"
-                    :label="__('Password')"
-                    type="password"
-                    required
-                    autocomplete="current-password"
-                    :placeholder="__('Password')"
-                    viewable
-                />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f1523;
+            background-image:
+                radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.16) 0%, transparent 45%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.14) 0%, transparent 45%);
+        }
+        .valex-gradient {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+        .valex-gradient:hover {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+    </style>
+</head>
 
-                @if (Route::has('password.request'))
-                    <flux:link class="absolute top-0 text-sm end-0" :href="route('password.request')" wire:navigate>
-                        {{ __('Forgot your password?') }}
-                    </flux:link>
-                @endif
+<body class="min-h-screen flex flex-col items-center justify-center px-4 py-10 text-slate-800 antialiased">
+
+    <div class="w-full max-w-md">
+        <!-- Brand Header -->
+        <div class="flex flex-col items-center text-center mb-7">
+            <div style="width: 84px; height: 84px;" class="rounded-2xl overflow-hidden ring-4 ring-purple-500/30 shadow-xl shadow-indigo-950/60 mb-3 bg-[#141b2d]">
+                <img src="{{ asset('images/jma-logo.png') }}"
+                     alt="JMA Kitchen Logo"
+                     class="w-full h-full object-cover">
             </div>
-
-            <!-- Remember Me -->
-            <flux:checkbox name="remember" :label="__('Remember me')" :checked="old('remember')" />
-
-            <div class="flex items-center justify-end">
-                <flux:button variant="primary" type="submit" class="w-full" data-test="login-button">
-                    {{ __('Log in') }}
-                </flux:button>
-            </div>
-        </form>
-
-        <div class="space-x-1 text-sm text-center rtl:space-x-reverse text-zinc-600 dark:text-zinc-400">
-            <span>{{ __('Don\'t have an account?') }}</span>
-            <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
+            <h1 class="text-white font-extrabold text-xl tracking-wide">JMA KITCHEN</h1>
+            <p class="text-[11px] text-purple-400 uppercase tracking-widest font-semibold mt-0.5">
+                Restaurant POS &amp; Management System
+            </p>
         </div>
+
+        <!-- Login Card -->
+        <div class="bg-white rounded-2xl shadow-2xl shadow-black/40 border border-slate-100 p-8">
+            <div class="text-center mb-6">
+                <h2 class="text-xl font-bold text-slate-800">Welcome Back</h2>
+                <p class="text-xs text-slate-500 mt-1">Sign in with your staff or administrator credentials</p>
+            </div>
+
+            <!-- Validation / Deactivated Account Errors -->
+            @if ($errors->any())
+                <div class="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs flex items-start gap-2.5">
+                    <i class="bi bi-exclamation-circle-fill text-sm mt-0.5 shrink-0"></i>
+                    <div class="space-y-0.5">
+                        @foreach ($errors->all() as $error)
+                            <p>{{ $error }}</p>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            @if (session('status'))
+                <div class="mb-5 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('login.store') }}" class="space-y-4">
+                @csrf
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                        Email Address
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none">
+                            <i class="bi bi-envelope"></i>
+                        </span>
+                        <input type="email"
+                               id="email"
+                               name="email"
+                               value="{{ old('email') }}"
+                               required
+                               autofocus
+                               autocomplete="email"
+                               placeholder="admin@jmakitchen.com"
+                               class="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition">
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label for="signin-password" class="block text-xs font-semibold text-slate-700">
+                            Password
+                        </label>
+                        @if (Route::has('password.request'))
+                            <a href="{{ route('password.request') }}" class="text-xs font-medium text-purple-600 hover:text-purple-700 transition">
+                                Forgot password?
+                            </a>
+                        @endif
+                    </div>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none">
+                            <i class="bi bi-lock"></i>
+                        </span>
+                        <input type="password"
+                               id="signin-password"
+                               name="password"
+                               required
+                               autocomplete="current-password"
+                               placeholder="••••••••"
+                               class="w-full pl-10 pr-10 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition">
+                        <button type="button"
+                                onclick="togglePassword()"
+                                aria-label="Toggle password visibility"
+                                class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition">
+                            <i id="toggle-password-icon" class="bi bi-eye-slash"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remember Me -->
+                <div class="flex items-center justify-between pt-0.5">
+                    <label for="remember" class="inline-flex items-center gap-2 cursor-pointer select-none">
+                        <input type="checkbox"
+                               id="remember"
+                               name="remember"
+                               {{ old('remember') ? 'checked' : '' }}
+                               class="w-4 h-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500">
+                        <span class="text-xs text-slate-600">Remember me</span>
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit"
+                        class="w-full py-2.5 px-4 rounded-xl valex-gradient text-white font-semibold text-sm shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition duration-150 flex items-center justify-center gap-2 cursor-pointer mt-2">
+                    <span>Sign In</span>
+                    <i class="bi bi-arrow-right"></i>
+                </button>
+            </form>
+
+            @if (Route::has('register'))
+                <div class="mt-6 pt-5 border-t border-slate-100 text-center">
+                    <p class="text-xs text-slate-500">
+                        Don't have an account?
+                        <a href="{{ route('register') }}" class="font-semibold text-purple-600 hover:text-purple-700 transition">
+                            Register
+                        </a>
+                    </p>
+                </div>
+            @endif
+        </div>
+
+        <!-- Footer -->
+        <p class="text-center text-[11px] text-slate-500 mt-6">
+            &copy; {{ date('Y') }} <span class="text-slate-400 font-semibold">JMA Kitchen</span> &mdash; Group 08 OOP Project
+        </p>
     </div>
-</x-layouts::auth>
+
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('signin-password');
+            const icon = document.getElementById('toggle-password-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('bi-eye-slash', 'bi-eye');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('bi-eye', 'bi-eye-slash');
+            }
+        }
+    </script>
+</body>
+
+</html>

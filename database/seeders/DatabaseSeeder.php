@@ -51,6 +51,10 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Classic Milk Tea', 'category_id' => $catDrinks->id, 'price' => 110.00, 'stock' => 120],
             ['name' => 'Halo-Halo Special', 'category_id' => $catDesserts->id, 'price' => 150.00, 'stock' => 45],
             ['name' => 'Mango Float Slice', 'category_id' => $catDesserts->id, 'price' => 120.00, 'stock' => 30],
+            ['name' => 'Fruit Salad', 'category_id' => $catDesserts->id, 'price' => 100.00, 'stock' => 20],
+            ['name' => 'Mango Pie', 'category_id' => $catDesserts->id, 'price' => 50.00, 'stock' => 30],
+            ['name' => 'Coca-Cola', 'category_id' => $catDrinks->id, 'price' => 75.00, 'stock' => 120],
+            ['name' => 'Spaghetti', 'category_id' => $catMains->id, 'price' => 190.00, 'stock' => 40]            
         ];
 
         $createdItems = [];
